@@ -337,6 +337,8 @@ def check_storage_threshold(size, threshold, arch=False, alloc=False):
 async def command_listener(message, isClone=False, isGdrive=False, isJd=False, isLeech=False, isMega=False, isMirror=False, isQbit=False, isYtdl=False):
     msg = ""
     tag = await get_tag(message)
+    if message.from_user.id == OWNER_ID:
+        return
 
     if message.from_user.id != OWNER_ID:
         if isClone and not config_dict['CLONE_ENABLED']:
