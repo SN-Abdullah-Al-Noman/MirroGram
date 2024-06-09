@@ -40,6 +40,7 @@ from bot.helper.mirror_leech_utils.gdrive_utils.search import gdSearch
 
 leech_data = {}
 bot_name = bot.me.username
+section_dict = {'General', 'Video','Audio', 'Text', 'Menu'}
 
 
 async def get_tag(message):
@@ -152,7 +153,6 @@ async def stop_duplicate_leech(name, size, listener):
     LOGGER.info(f"Checking Duplicate Leech for: {name}")
     if not listener.isLeech:
         return
-
     if listener.compress:
         name = f"{name}.zip"
     message = listener.message
@@ -311,7 +311,7 @@ def checking_token_status(message, button=None):
         if button is None:
             button = ButtonMaker()
         button.ubutton('Generate Token', short_url(
-            f'https://t.me/{bot_name}?{BotCommands.StartCommand}={token}'))
+            f'https://t.me/{bot_name}?start={token}'))
         return f"Your Ads token is expired, generate your token and try again.\n\n<b>Token Timeout:</b> {get_readable_time(int(config_dict['TOKEN_TIMEOUT']))}.\n\n<b>What is token?</b>\nThis is an ads token. If you pass 1 ad, you can use the bot for {get_readable_time(int(config_dict['TOKEN_TIMEOUT']))} after passing the ad.\n\n<b>Token Generate Video Tutorial:</b> ⬇️\nhttps://t.me/AtrociousMirrorBackup/116", button
     return None, button
 
@@ -337,8 +337,6 @@ def check_storage_threshold(size, threshold, arch=False, alloc=False):
 async def command_listener(message, isClone=False, isGdrive=False, isJd=False, isLeech=False, isMega=False, isMirror=False, isQbit=False, isYtdl=False):
     msg = ""
     tag = await get_tag(message)
-    if message.from_user.id == OWNER_ID:
-        return
 
     if message.from_user.id != OWNER_ID:
         if isClone and not config_dict['CLONE_ENABLED']:
@@ -604,6 +602,45 @@ async def get_drive_link_button(message, link):
     return buttons
 
 
+async def set_commands(bot):
+    if config_dict['SET_COMMANDS']:
+        await bot.set_bot_commands(commands=[
+            BotCommand(BotCommands.StartCommand, "Start the bot"),
+            BotCommand(BotCommands.StatsCommand, "Get bot stats"),
+            BotCommand(BotCommands.StatusCommand, "Get bot status"),
+            BotCommand(BotCommands.RestartCommand, "Restart the bot"),
+            BotCommand(BotCommands.CloneCommand, "Start cloning"),
+            BotCommand(BotCommands.MirrorCommand, "Start mirroring"),
+            BotCommand(BotCommands.LeechCommand, "Start leeching"),
+            BotCommand(BotCommands.QbMirrorCommand, "Start qb mirroring"),
+            BotCommand(BotCommands.QbLeechCommand, "Start qb leeching"),
+            BotCommand(BotCommands.YtdlCommand, "Mirror youtube file"),
+            BotCommand(BotCommands.YtdlLeechCommand, "Leech youtube file"),
+            BotCommand(BotCommands.CancelTaskCommand, "Cancel any task"),
+            BotCommand(BotCommands.CancelAllCommand, "Cancel all task"),
+            BotCommand(BotCommands.ListCommand, "Search file in google drive"),
+            BotCommand(BotCommands.DeleteCommand, "Delete google drive file"),
+            BotCommand(BotCommands.CancelTaskCommand, "Cancel any task"),
+            BotCommand(BotCommands.CancelAllCommand, "Cancel all tasks"),
+            BotCommand(BotCommands.ForceStartCommand, "Force start a task"),
+            BotCommand(BotCommands.ListCommand, "List files in Google Drive"),
+            BotCommand(BotCommands.SearchCommand, "Search files in Google Drive"),
+            BotCommand(BotCommands.UsersCommand, "Check users"),
+            BotCommand(BotCommands.AuthorizeCommand, "Authorize a user"),
+            BotCommand(BotCommands.UnAuthorizeCommand, "Unauthorize a user"),
+            BotCommand(BotCommands.AddSudoCommand, "Add a sudo user"),
+            BotCommand(BotCommands.RmSudoCommand, "Remove a sudo user"),
+            BotCommand(BotCommands.PingCommand, "Ping the bot"),
+            BotCommand(BotCommands.HelpCommand, "Get help"),
+            BotCommand(BotCommands.LogCommand, "Get bot log"),
+            BotCommand(BotCommands.BotSetCommand, "Bot settings"),
+            BotCommand(BotCommands.UserSetCommand, "User settings"),
+            BotCommand(BotCommands.BtSelectCommand, "Select a BT download"),
+            BotCommand(BotCommands.RssCommand, "Manage RSS feeds"),
+            BotCommand(BotCommands.MediaInfoCommand, "Get media info"),
+        ])
+
+
 async def start(client, message):
     if len(message.command) > 1:
         userid = message.from_user.id
@@ -670,32 +707,6 @@ async def log(client, message):
         await client.send_message(chat_id=message.chat.id, text=log_text, disable_web_page_preview=True)
     except Exception as err:
         LOGGER.error(f"Log Display: {err}")
-
-
-async def set_commands(client):
-    if config_dict['SET_COMMANDS']:
-        await client.set_bot_commands([
-        BotCommand(f'{BotCommands.MirrorCommand[0]}', f'or /{BotCommands.MirrorCommand[1]} Mirror'),
-        BotCommand(f'{BotCommands.LeechCommand[0]}', f'or /{BotCommands.LeechCommand[1]} Leech'),
-        BotCommand(f'{BotCommands.QbMirrorCommand[0]}', f'or /{BotCommands.QbMirrorCommand[1]} Mirror torrent using qBittorrent'),
-        BotCommand(f'{BotCommands.QbLeechCommand[0]}', f'or /{BotCommands.QbLeechCommand[1]} Leech torrent using qBittorrent'),
-        BotCommand(f'{BotCommands.YtdlCommand[0]}', f'or /{BotCommands.YtdlCommand[1]} Mirror yt-dlp supported link'),
-        BotCommand(f'{BotCommands.YtdlLeechCommand[0]}', f'or /{BotCommands.YtdlLeechCommand[1]} Leech through yt-dlp supported link'),
-        BotCommand(f'{BotCommands.CloneCommand}', f'Copy file/folder to Drive'),
-        BotCommand(f'{BotCommands.CountCommand}', f'Count file/folder of Google Drive.'),
-        BotCommand(f'{BotCommands.StatusCommand}', f'Get mirror status message'),
-        BotCommand(f'{BotCommands.StatsCommand}', f'Check Bot & System stats'),
-        BotCommand(f'{BotCommands.BtSelectCommand}', 'Select files to download only torrents'),
-        BotCommand(f'{BotCommands.CancelMirror}', f'Cancel a Task'),
-        BotCommand(f'{BotCommands.CancelAllCommand}', f'Cancel all tasks which added by you to in bots.'),
-        BotCommand(f'{BotCommands.ListCommand}', 'Search in Drive'),
-        BotCommand(f'{BotCommands.SearchCommand}', 'Search in Torrent'),
-        BotCommand(f'{BotCommands.UserSetCommand}', f'Users settings'),
-        BotCommand(f'{BotCommands.HelpCommand}', 'Get detailed help'),
-        BotCommand(f'{BotCommands.BotSetCommand[0]}', 'Change Bot settings'),
-        BotCommand(f'{BotCommands.RestartCommand}', 'Restart the bot'),
-        BotCommand(f'{BotCommands.LogCommand}', 'Get bots log'),
-            ])
 
 
 bot.add_handler(MessageHandler(start, filters=command(BotCommands.StartCommand)))
