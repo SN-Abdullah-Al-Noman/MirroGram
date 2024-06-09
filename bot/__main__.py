@@ -1,6 +1,6 @@
 from aiofiles import open as aiopen
 from aiofiles.os import path as aiopath, remove
-from asyncio import gather, create_subprocess_exec, sleep
+from asyncio import gather, create_subprocess_exec
 from os import execl as osexecl
 from psutil import (
     disk_usage,
@@ -38,13 +38,13 @@ from .helper.telegram_helper.bot_commands import BotCommands
 from .helper.telegram_helper.button_build import ButtonMaker
 from .helper.telegram_helper.filters import CustomFilters
 from .helper.telegram_helper.message_utils import sendMessage, editMessage, sendFile
+from .modules.func import *
 from .modules import (
     authorize,
     broadcast,
     cancel_task,
     clone,
     exec,
-    func,
     gd_count,
     gd_delete,
     gd_search,
@@ -74,9 +74,7 @@ async def restart(_, message):
     if st := Intervals["status"]:
         for intvl in list(st.values()):
             intvl.cancel()
-    await sleep(1)
     await sync_to_async(clean_all)
-    await sleep(1)
     proc1 = await create_subprocess_exec(
         "pkill", "-9", "-f", "gunicorn|aria2c|ffmpeg|rclone|java"
     )
@@ -100,22 +98,22 @@ async def log(_, message):
 
 help_string = f"""
 NOTE: Try each command without any argument to see more detalis.
-/{BotCommands.MirrorCommand[0]} or /{BotCommands.MirrorCommand[1]}: Start mirroring to Google Drive.
-/{BotCommands.QbMirrorCommand[0]} or /{BotCommands.QbMirrorCommand[1]}: Start Mirroring to Google Drive using qBittorrent.
-/{BotCommands.JdMirrorCommand[0]} or /{BotCommands.JdMirrorCommand[1]}: Start Mirroring to Google Drive using JDownloader.
-/{BotCommands.YtdlCommand[0]} or /{BotCommands.YtdlCommand[1]}: Mirror yt-dlp supported link.
-/{BotCommands.LeechCommand[0]} or /{BotCommands.LeechCommand[1]}: Start leeching to Telegram.
-/{BotCommands.QbLeechCommand[0]} or /{BotCommands.QbLeechCommand[1]}: Start leeching using qBittorrent.
-/{BotCommands.JdLeechCommand[0]} or /{BotCommands.JdLeechCommand[1]}: Start leeching using JDownloader.
-/{BotCommands.YtdlLeechCommand[0]} or /{BotCommands.YtdlLeechCommand[1]}: Leech yt-dlp supported link.
+/{BotCommands.MirrorCommand}: Start mirroring to Google Drive.
+/{BotCommands.QbMirrorCommand}: Start Mirroring to Google Drive using qBittorrent.
+/{BotCommands.JdMirrorCommand}: Start Mirroring to Google Drive using JDownloader.
+/{BotCommands.YtdlCommand}: Mirror yt-dlp supported link.
+/{BotCommands.LeechCommand}: Start leeching to Telegram.
+/{BotCommands.QbLeechCommand}: Start leeching using qBittorrent.
+/{BotCommands.JdLeechCommand}: Start leeching using JDownloader.
+/{BotCommands.YtdlLeechCommand}: Leech yt-dlp supported link.
 /{BotCommands.CloneCommand} [drive_url]: Copy file/folder to Google Drive.
 /{BotCommands.CountCommand} [drive_url]: Count file/folder of Google Drive.
 /{BotCommands.DeleteCommand} [drive_url]: Delete file/folder from Google Drive (Only Owner & Sudo).
-/{BotCommands.UserSetCommand[0]} or /{BotCommands.UserSetCommand[1]} [query]: Users settings.
-/{BotCommands.BotSetCommand[0]} or /{BotCommands.BotSetCommand[1]} [query]: Bot settings.
+/{BotCommands.UserSetCommand} [query]: Users settings.
+/{BotCommands.BotSetCommand} [query]: Bot settings.
 /{BotCommands.BtSelectCommand}: Select files from torrents by gid or reply.
-/{BotCommands.CancelTaskCommand[0]} or /{BotCommands.CancelTaskCommand[1]} [gid]: Cancel task by gid or reply.
-/{BotCommands.ForceStartCommand[0]} or /{BotCommands.ForceStartCommand[1]} [gid]: Force start task by gid or reply.
+/{BotCommands.CancelTaskCommand} [gid]: Cancel task by gid or reply.
+/{BotCommands.ForceStartCommand} [gid]: Force start task by gid or reply.
 /{BotCommands.CancelAllCommand} [query]: Cancel all [status] tasks.
 /{BotCommands.ListCommand} [query]: Search in Google Drive(s).
 /{BotCommands.SearchCommand} [query]: Search for torrents with API.
