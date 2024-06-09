@@ -57,26 +57,14 @@ if DATABASE_URL is not None:
         config_dict = db.settings.config.find_one({"_id": bot_id})
         if old_config is not None:
             del old_config["_id"]
-        if (
-            old_config is not None
-            and old_config == dict(dotenv_values("config.env"))
-            or old_config is None
-        ) and config_dict is not None:
-            environ["UPSTREAM_REPO"] = config_dict["UPSTREAM_REPO"]
-            environ["UPSTREAM_BRANCH"] = config_dict["UPSTREAM_BRANCH"]
         conn.close()
     except Exception as e:
         log_error(f"Database ERROR: {e}")
 
-UPSTREAM_REPO = environ.get("UPSTREAM_REPO", "")
-if len(UPSTREAM_REPO) == 0:
-    UPSTREAM_REPO = None
+UPSTREAM_REPO = "https://github.com/SN-Abdullah-Al-Noman/MirroGram"
+UPSTREAM_BRANCH = "main"
 
-UPSTREAM_BRANCH = environ.get("UPSTREAM_BRANCH", "")
-if len(UPSTREAM_BRANCH) == 0:
-    UPSTREAM_BRANCH = "master"
-
-if UPSTREAM_REPO is not None:
+if UPSTREAM_REPO:
     if path.exists(".git"):
         srun(["rm", "-rf", ".git"])
 
