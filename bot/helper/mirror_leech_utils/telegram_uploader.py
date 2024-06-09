@@ -363,8 +363,6 @@ class TgUploader:
             self._thumb = None
         thumb = self._thumb
         self._is_corrupted = False
-        if len(cap_mono) > 60:
-            cap_mono = cap_mono[:57] + "..."
         try:
             is_video, is_audio, is_image = await get_document_type(self._up_path)
 
