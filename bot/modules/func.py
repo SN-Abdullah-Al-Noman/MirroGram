@@ -40,7 +40,6 @@ from bot.helper.mirror_leech_utils.gdrive_utils.search import gdSearch
 
 leech_data = {}
 bot_name = bot.me.username
-section_dict = {'General', 'Video','Audio', 'Text', 'Menu'}
 
 
 async def get_tag(message):
@@ -153,6 +152,7 @@ async def stop_duplicate_leech(name, size, listener):
     LOGGER.info(f"Checking Duplicate Leech for: {name}")
     if not listener.isLeech:
         return
+
     if listener.compress:
         name = f"{name}.zip"
     message = listener.message
@@ -311,7 +311,7 @@ def checking_token_status(message, button=None):
         if button is None:
             button = ButtonMaker()
         button.ubutton('Generate Token', short_url(
-            f'https://t.me/{bot_name}?start={token}'))
+            f'https://t.me/{bot_name}?{BotCommands.StartCommand}={token}'))
         return f"Your Ads token is expired, generate your token and try again.\n\n<b>Token Timeout:</b> {get_readable_time(int(config_dict['TOKEN_TIMEOUT']))}.\n\n<b>What is token?</b>\nThis is an ads token. If you pass 1 ad, you can use the bot for {get_readable_time(int(config_dict['TOKEN_TIMEOUT']))} after passing the ad.\n\n<b>Token Generate Video Tutorial:</b> ⬇️\nhttps://t.me/AtrociousMirrorBackup/116", button
     return None, button
 
