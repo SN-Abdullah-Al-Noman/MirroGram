@@ -395,7 +395,7 @@ class TgUploader:
                     progress=self._upload_progress,
                 )
             elif is_video:
-                await edit_video_metadata user_id=self._listener.message.from_user.id, file_path=self._up_path)
+                await edit_video_metadata (user_id=self._listener.message.from_user.id, file_path=self._up_path)
                 key = "videos"
                 duration = (await get_media_info(self._up_path))[0]
                 if thumb is None:
