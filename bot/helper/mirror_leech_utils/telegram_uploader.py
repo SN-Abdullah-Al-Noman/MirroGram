@@ -32,7 +32,7 @@ from bot.helper.ext_utils.media_utils import (
     get_audio_thumb,
 )
 from bot.helper.telegram_helper.message_utils import deleteMessage
-from bot.modules.func import copy_message, edit_video_titles, update_leech_links
+from bot.modules.func import copy_message, edit_video_metadata, update_leech_links
 
 
 LOGGER = getLogger(__name__)
@@ -395,10 +395,7 @@ class TgUploader:
                     progress=self._upload_progress,
                 )
             elif is_video:
-                try:
-                    await edit_video_titles(user_id=self._listener.message.from_user.id, file_path=self._up_path)
-                except:
-                    pass
+                await edit_video_metadata user_id=self._listener.message.from_user.id, file_path=self._up_path)
                 key = "videos"
                 duration = (await get_media_info(self._up_path))[0]
                 if thumb is None:
