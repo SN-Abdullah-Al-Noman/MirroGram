@@ -911,7 +911,6 @@ async def load_config():
     USER_TRANSMISSION = USER_TRANSMISSION.lower() == "true" and IS_PREMIUM_USER
 
     BASE_URL_PORT = environ.get("PORT")
-    BASE_URL_PORT = 80 if len(BASE_URL_PORT) == 0 else int(BASE_URL_PORT)
 
     RCLONE_SERVE_URL = environ.get("RCLONE_SERVE_URL", "")
     if len(RCLONE_SERVE_URL) == 0:
