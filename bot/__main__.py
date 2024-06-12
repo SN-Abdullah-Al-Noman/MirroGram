@@ -98,22 +98,22 @@ async def log(_, message):
 
 help_string = f"""
 NOTE: Try each command without any argument to see more detalis.
-/{BotCommands.MirrorCommand}: Start mirroring to Google Drive.
-/{BotCommands.QbMirrorCommand}: Start Mirroring to Google Drive using qBittorrent.
-/{BotCommands.JdMirrorCommand}: Start Mirroring to Google Drive using JDownloader.
-/{BotCommands.YtdlCommand}: Mirror yt-dlp supported link.
-/{BotCommands.LeechCommand}: Start leeching to Telegram.
-/{BotCommands.QbLeechCommand}: Start leeching using qBittorrent.
-/{BotCommands.JdLeechCommand}: Start leeching using JDownloader.
-/{BotCommands.YtdlLeechCommand}: Leech yt-dlp supported link.
+/{BotCommands.MirrorCommand[0]}: Start mirroring to Google Drive.
+/{BotCommands.QbMirrorCommand[0]}: Start Mirroring to Google Drive using qBittorrent.
+/{BotCommands.JdMirrorCommand[0]}: Start Mirroring to Google Drive using JDownloader.
+/{BotCommands.YtdlCommand[0]}: Mirror yt-dlp supported link.
+/{BotCommands.LeechCommand[0]}: Start leeching to Telegram.
+/{BotCommands.QbLeechCommand[0]}: Start leeching using qBittorrent.
+/{BotCommands.JdLeechCommand[0]}: Start leeching using JDownloader.
+/{BotCommands.YtdlLeechCommand[0]}: Leech yt-dlp supported link.
 /{BotCommands.CloneCommand} [drive_url]: Copy file/folder to Google Drive.
 /{BotCommands.CountCommand} [drive_url]: Count file/folder of Google Drive.
 /{BotCommands.DeleteCommand} [drive_url]: Delete file/folder from Google Drive (Only Owner & Sudo).
-/{BotCommands.UserSetCommand} [query]: Users settings.
-/{BotCommands.BotSetCommand} [query]: Bot settings.
+/{BotCommands.UserSetCommand[0]} [query]: Users settings.
+/{BotCommands.BotSetCommand[0]} [query]: Bot settings.
 /{BotCommands.BtSelectCommand}: Select files from torrents by gid or reply.
-/{BotCommands.CancelTaskCommand} [gid]: Cancel task by gid or reply.
-/{BotCommands.ForceStartCommand} [gid]: Force start task by gid or reply.
+/{BotCommands.CancelTaskCommand[0]} [gid]: Cancel task by gid or reply.
+/{BotCommands.ForceStartCommand[0]} [gid]: Force start task by gid or reply.
 /{BotCommands.CancelAllCommand} [query]: Cancel all [status] tasks.
 /{BotCommands.ListCommand} [query]: Search in Google Drive(s).
 /{BotCommands.SearchCommand} [query]: Search for torrents with API.
