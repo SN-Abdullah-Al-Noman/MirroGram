@@ -35,6 +35,7 @@ from bot.helper.ext_utils.links_utils import is_gdrive_id, is_telegram_link
 from bot.helper.ext_utils.bot_utils import cmd_exec, sync_to_async, get_telegraph_list, new_task
 from bot.helper.ext_utils.status_utils import get_readable_file_size, get_readable_time
 from bot.helper.telegram_helper.filters import CustomFilters
+from bot.helper.ext_utils.bot_utils import update_user_ldata
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.telegram_helper.message_utils import editMessage
@@ -762,6 +763,54 @@ async def log(client, message):
         LOGGER.error(f"Log Display: {err}")
 
 
+async def add_to_paid_user(client, message):
+    id_ = ""
+    msg = message.text.split()
+    if len(msg) > 1:
+        id_ = int(msg[1].strip())
+    elif reply_to := message.reply_to_message:
+        id_ = reply_to.from_user.id
+    if id_:
+        if id_ == OWNER_ID:
+            msg = 'You are playing with owner.'
+        elif id_ in user_data and user_data[id_].get('is_paid_user'):
+            msg = 'User already in paid user list.'
+        else:
+            update_user_ldata(id_, 'is_paid_user', True)
+            update_user_ldata(id_, 'is_blacklist', False)
+            if DATABASE_URL:
+                await DbManager().update_user_data(id_)
+            msg = 'User added in paid user list.\nFrom now token system and some limit will skip for him.'
+    else:
+        msg = "Give ID or Reply To message of whom you want to add in paid user list."
+    await send_to_chat(message=message, text=msg, reply=True)
+
+
+async def remove_from_paid_user(client, message):
+    id_ = ""
+    msg = message.text.split()
+    if len(msg) > 1:
+        id_ = int(msg[1].strip())
+    elif reply_to := message.reply_to_message:
+        id_ = reply_to.from_user.id
+    if id_:
+        if id_ == OWNER_ID:
+            msg = 'You are playing with owner'
+        elif id_ not in user_data and user_data[id_].get('is_paid_user'):
+            msg = 'User not in paid user list.'
+        else:
+            update_user_ldata(id_, 'is_paid_user', False)
+            if DATABASE_URL:
+                await DbManager().update_user_data(id_)
+            msg = 'User removed from paid user list.'
+    else:
+        msg = "Give ID or Reply To message of whom you want to remove from paid user list."
+    await send_to_chat(message=message, text=msg, reply=True)
+
+
 bot.add_handler(MessageHandler(start, filters=command(BotCommands.StartCommand)))
 bot.add_handler(MessageHandler(stats, filters=command(BotCommands.StatsCommand) & CustomFilters.authorized))
 bot.add_handler(MessageHandler(log, filters=command(BotCommands.LogCommand) & CustomFilters.sudo))
+
+bot.add_handler(MessageHandler(add_to_paid_user, filters=(command("addpaid") & CustomFilters.sudo)))
+bot.add_handler(MessageHandler(remove_from_paid_user, filters=(command("rmpaid") & CustomFilters.sudo)))
