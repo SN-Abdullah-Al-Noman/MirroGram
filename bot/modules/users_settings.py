@@ -729,30 +729,18 @@ Check all yt-dlp api options from this <a href='https://github.com/yt-dlp/yt-dlp
         pfunc = partial(set_option, pre_event=query, option="metadatatext")
         await event_handler(client, query, pfunc)
 
-     elif data[2] == "attachment_url":
+    elif data[2] == "attachment_url":
         await query.answer()
         buttons = ButtonMaker()
         if (
-            user_dict.get(
-                "attachmenturl",
-                False
-            )
+            user_dict.get("attachmenturl", False)
         ):
-            buttons.ibutton(
-                "Remove Attachment Url",
-                f"userset {user_id} attachmenturl"
-            )
-        buttons.ibutton(
-            "Back",
-            f"userset {user_id} leech"
-        )
-        buttons.ibutton(
-            "Close",
-            f"userset {user_id} close"
-        )
+            buttons.ibutton("Remove Attachment Url", f"userset {user_id} attachmenturl")
+        buttons.ibutton("Back", f"userset {user_id} leech")
+        buttons.ibutton("Close", f"userset {user_id} close")
         await editMessage(
             message,
-            "Send Leech Attachment Url,Which you want to get embedded with the video. Timeout: 60 sec",
+            "Send Attachment Url. Timeout: 60 sec",
             buttons.build_menu(1),
         )
         pfunc = partial(set_option, pre_event=query, option="attachmenturl")
